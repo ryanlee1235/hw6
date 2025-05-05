@@ -22,27 +22,35 @@ struct MyStringHash {
     HASH_INDEX_T operator()(const std::string& k) const
     {
         // Add your code here
+        // store each group of 6 in array
         unsigned long long w[5];
-        int r = 36;
+        int r = 36; // 36 constant
+        // number of full groups of 6
         int runNum = (int)k.length() / 6;
         int length = k.length();
+        // number of slots filled in a non-filled group
         int remainder = (int)k.length() % 6;
 
         int count = runNum;
+        // loop through w[]
         for(int i = 0; i < 5; i++)
         {
+            // start w[4 - i] as 0
             w[4 - i] = 0;
             if(i <= runNum)
             {
+                // loop through substring of size 6
                 for(int j = 0; j < 6; j++)
                 {
                     HASH_INDEX_T kHash;
                     if(count > 0)
                     {
+                        // formula for if its a full container
                         kHash = letterDigitToNumber(k[j + (length - (6 * (i + 1)))]);
                     }
                     else
                     {
+                        // leading 0's
                         if(j < (6 - remainder))
                         {
                             kHash = 0;
@@ -53,6 +61,7 @@ struct MyStringHash {
                         }
                     }
                     // std::cout << "kHash: " << kHash << std::endl;
+                    // linear power code
                     w[4 - i] *= r;
                     w[4 - i] += kHash;
                 }
