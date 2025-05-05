@@ -18,7 +18,11 @@ int main(int argc, char* argv[])
     // key to hash
     string k(argv[1]);
     size_t hk = h1(k);
+
+    // size_t letter = h1.letterDigitToNumber('0');
     // Test the hash
     cout << "h(" << k << ")=" << hk << endl;
+
+    // cout << letter << endl;
     return 0;
 }

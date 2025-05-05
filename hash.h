@@ -5,6 +5,8 @@
 #include <cmath>
 #include <random>
 #include <chrono>
+#include <ctime>
+#include <cstdlib>
 
 typedef std::size_t HASH_INDEX_T;
 
@@ -20,15 +22,79 @@ struct MyStringHash {
     HASH_INDEX_T operator()(const std::string& k) const
     {
         // Add your code here
+        unsigned long long w[5];
+        int r = 36;
+        int runNum = (int)k.length() / 6;
+        int length = k.length();
+        int remainder = (int)k.length() % 6;
 
+        int count = runNum;
+        for(int i = 0; i < 5; i++)
+        {
+            w[4 - i] = 0;
+            if(i <= runNum)
+            {
+                for(int j = 0; j < 6; j++)
+                {
+                    HASH_INDEX_T kHash;
+                    if(count > 0)
+                    {
+                        kHash = letterDigitToNumber(k[j + (length - (6 * (i + 1)))]);
+                    }
+                    else
+                    {
+                        if(j < (6 - remainder))
+                        {
+                            kHash = 0;
+                        }
+                        else
+                        {
+                            kHash = letterDigitToNumber(k[j - (6 - remainder)]);
+                        }
+                    }
+                    // std::cout << "kHash: " << kHash << std::endl;
+                    w[4 - i] *= r;
+                    w[4 - i] += kHash;
+                }
+            }
+            // else
+            // {
+            //     w[4 - i] = 0;
+            // }
+            if(count > 0)
+            {
+                count--;
+            }
+        }
 
+        HASH_INDEX_T finalHash = 0;
+        for(int i = 0; i < 5; i++)
+        {
+            finalHash += rValues[i] * w[i];
+            // std::cout << "w[" << i << "]: " << w[i] << std::endl;
+        }
+        return finalHash;
     }
 
     // A likely helper function is to convert a-z,0-9 to an integral value 0-35
     HASH_INDEX_T letterDigitToNumber(char letter) const
     {
         // Add code here or delete this helper function if you do not want it
-
+        char newLetter = letter;
+        if(letter <= 'Z' && letter >= 'A')
+        {
+            newLetter = letter + ('a' - 'A'); // Converts Uppercase to lowercase
+        }
+        HASH_INDEX_T index;
+        if(newLetter <= 'z' && newLetter >= 'a')
+        {
+            index = std::size_t(newLetter - 'a');
+        }
+        else if(newLetter <= '9' && newLetter >= '0')
+        {
+            index = std::size_t(newLetter - '0') + 26;
+        }
+        return index;
     }
 
     // Code to generate the random R values
