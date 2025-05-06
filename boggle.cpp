@@ -95,5 +95,40 @@ bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>
 								   std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
 {
 //add your solution here!
-
+	// check if indexed out of bounds
+	if(r >= board.size() || c >= board[0].size())
+	{
+		return false;
+	}
+	word += board[r][c];
+	if(prefix.find(word) != prefix.end())
+	{
+		// if you keep iterating and now its no longer a word at all, then this is the longest word
+		if(!boggleHelper(dict, prefix, board, word, result, r + dr, c + dc, dr, dc))
+		{
+			// check that even if the next recursion isn't a word, that this prefix is a word
+			if(dict.find(word) != dict.end())
+			{
+				// only then insert
+				result.insert(word);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+	// if its not a prefix, it may be a word. If so, its the longest word.
+	else if(dict.find(word) != dict.end())
+	{
+		result.insert(word);
+		return true;
+	}
+	// if its not a prefix or a word, then end recursion
+	else
+	{
+		return false;
+	}
+	return true;
 }
