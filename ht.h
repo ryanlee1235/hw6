@@ -360,6 +360,10 @@ void HashTable<K,V,Prober,Hash,KEqual>::insert(const ItemType& p)
         realNodes_++;
         totalNodes_++;
     }
+    else if(table_[h] != nullptr) // this means duplicate
+    {
+        table_[h]->item.second = p.second;
+    }
 }
 
 // To be completed
